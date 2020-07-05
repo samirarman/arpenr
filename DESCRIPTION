@@ -17,6 +17,7 @@ Imports:
     rvest,
     dplyr,
     stringr,
-    magrittr
+    magrittr,
+    RSelenium
 Suggests: 
     testthat

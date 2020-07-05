@@ -2,7 +2,4 @@
 
 export("%>%")
 export(get_all_registries)
-export(get_births)
-export(get_deaths)
-export(get_marriages)
 importFrom(magrittr,"%>%")
