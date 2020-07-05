@@ -28,11 +28,11 @@ check_arguments <- function(year, month, region, state, wait, query) {
 
 site <- "https://transparencia.registrocivil.org.br/registros"
 
-queries <- c(
-  all = "all",
-  births = "births",
-  marriages = "marriages",
-  deaths = "deaths"
+queries <- list(
+  all =c("all"),
+  births = c("births"),
+  marriages = c("marriages"),
+  deaths = c("deaths")
 )
 
 

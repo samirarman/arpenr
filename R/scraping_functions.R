@@ -10,22 +10,30 @@ scrape_data <- function(rd, year, month, state, query) {
       is_table_correct(rd, year, month, state, query)
   }
 
+  if (is_data_available(rd)) {
   data <- scrape_table(rd) %>%
     rbind(data)
-
+  }
 
   while (is_next_btn_avail(rd)) {
     next_btn <-
       rd$findElement(using = "xpath",
                      value = "//a[@aria-label= 'Goto next page']")
 
-    suppressMessages(next_btn$clickElement())
-    wait_for_table()
+    next_btn$clickElement()
+    wait_for_table(rd)
+
+    if (is_data_available(rd)) {
     data <- scrape_table(rd) %>%
       rbind(data)
+    }
   }
 
+  if (nrow(data) > 1) {
   dplyr::arrange(data, data[[1]])
+  } else {
+    data
+  }
 
 }
 
@@ -38,7 +46,7 @@ scrape_table <- function(rd) {
     rvest::html_table() %>%
     dplyr::mutate(
       Ano = as.character(card_elements$year),
-      Mês = ifelse(is.null(card_elements$month), "Todos", card_elements$month)
+      "M\u00eas" = ifelse(is.null(card_elements$month), "Todos", card_elements$month)
     )
 }
 
@@ -113,7 +121,7 @@ wait_for_table <- function(rd) {
 
 is_table_correct <- function(rd, year, month, state, query) {
   is_table_present(rd) &
-    is_data_available(rd) &
+    # is_data_available(rd) &
     is_table_contents_correct(rd, year, month, state, query)
 }
 
@@ -143,7 +151,7 @@ is_table_contents_correct <-
       query_correct <- TRUE
     } else if (query == queries$marriages & card_query == "Casamentos") {
       query_correct <- TRUE
-    } else if (query == queries$deaths & card_query == "Óbitos") {
+    } else if (query == queries$deaths & card_query == "\u00d3bitos") {
       query_correct <- TRUE
     }
 
@@ -171,7 +179,7 @@ is_data_available <- function(rd) {
   table <- xml2::read_html(rd$getPageSource()[[1]]) %>%
     rvest::html_node("table") %>%
     rvest::html_table()
-  ! table[1, 1] == "Não há resultados a serem exibidos."
+  ! table[1, 1] == "N\u00e3o h\u00e1 resultados a serem exibidos."
 }
 
 is_table_present <- function(rd) {
@@ -186,12 +194,13 @@ is_table_present <- function(rd) {
 }
 
 is_next_btn_avail <- function(rd) {
-  btn <- tryCatch(
+  btn <- suppressMessages(tryCatch(
     rd$findElement(using = "xpath",
                    value = "//a[@aria-label= 'Goto next page']"),
     error = function(x) {
       return(NULL)
     }
+  )
   )
   ! is.null(btn)
 }

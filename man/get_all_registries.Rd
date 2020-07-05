@@ -2,9 +2,36 @@
 % Please edit documentation in R/get_data_functions.R
 \name{get_all_registries}
 \alias{get_all_registries}
+\alias{get_births}
+\alias{get_marriages}
+\alias{get_deaths}
 \title{Retrieves the number of registries in ARPEN website.}
 \usage{
 get_all_registries(
+  rd = NULL,
+  year = "2020",
+  month = "Todos",
+  state = "Todos",
+  wait = 10L
+)
+
+get_births(
+  rd = NULL,
+  year = "2020",
+  month = "Todos",
+  state = "Todos",
+  wait = 10L
+)
+
+get_marriages(
+  rd = NULL,
+  year = "2020",
+  month = "Todos",
+  state = "Todos",
+  wait = 10L
+)
+
+get_deaths(
   rd = NULL,
   year = "2020",
   month = "Todos",
@@ -31,6 +58,7 @@ the Brazilian Association of Civil Registries website.}
 }
 \value{
 A data frame containing the requested data.
+If no data was found, an empty data frame is returned.
 }
 \description{
 Retrieves the number of the recorded vital events (all, births,

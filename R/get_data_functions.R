@@ -31,6 +31,7 @@
 #' the Brazilian Association of Civil Registries website.
 #'
 #' @return A data frame containing the requested data.
+#' If no data was found, an empty data frame is returned.
 #' @export
 #'
 #' @examples
@@ -68,6 +69,8 @@ get_all_registries <-
 
   }
 
+#' @rdname get_all_registries
+#' @export
 get_births <-
   function(rd = NULL,
            year = "2020",
@@ -92,6 +95,8 @@ get_births <-
 
   }
 
+#' @rdname get_all_registries
+#' @export
 get_marriages <-
   function(rd = NULL,
            year = "2020",
@@ -116,6 +121,8 @@ get_marriages <-
 
   }
 
+#' @rdname get_all_registries
+#' @export
 get_deaths <-
   function(rd = NULL,
            year = "2020",
