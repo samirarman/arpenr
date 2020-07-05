@@ -1,4 +1,4 @@
-#' Gets the number of deaths from the specified
+#' Retrieves the number of deaths from the specified
 #' city or state.
 #'
 #' @param rd An RSelenium remote driver.
@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' get_deaths(rd, 2015, Junho)
+#' get_deaths(rd, "2015", "Junho")
 #' }
 get_deaths <-
   function(rd = NULL,
@@ -35,6 +35,6 @@ get_deaths <-
 
     deaths_radio_button$clickElement()
 
-    scrape_data(rd, year, month, state, caller = "deaths")
+    scrape_data(rd, year, month, state, query = queries$deaths)
 
   }

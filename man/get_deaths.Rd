@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_deaths.R
 \name{get_deaths}
 \alias{get_deaths}
-\title{Gets the number of deaths from the specified
+\title{Retrieves the number of deaths from the specified
 city or state.}
 \usage{
 get_deaths(
@@ -29,11 +29,11 @@ retrieve data.}
 A data frame containing the required data.
 }
 \description{
-Gets the number of deaths from the specified
+Retrieves the number of deaths from the specified
 city or state.
 }
 \examples{
 \dontrun{
-get_deaths(rd, 2015, Junho)
+get_deaths(rd, "2015", "Junho")
 }
 }

@@ -1,21 +1,22 @@
 Package: arpenr
-Title: What the Package Does (One Line, Title Case)
+Title: Retrieves Data From ARPEN Brasil
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Samir",
+           family = "Arman",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "samir.arman@gmail.com")
+Description: Retrieves data from ARPEN Brasil webpages.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Imports: 
-    magrittr,
     xml2,
     rvest,
     dplyr,
-    stringr
+    stringr,
+    magrittr
+Suggests: 
+    testthat

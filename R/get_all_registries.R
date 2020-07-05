@@ -1,5 +1,6 @@
-#' Retrieves the number of registered marriages
-#' according to the arguments provided
+#' Retrieves the number of all registered events
+#' (births, marriages, and deaths) according to the
+#' arguments provided
 #'
 #' @param rd An RSelenium webdriver.
 #' @param year Year
@@ -11,7 +12,7 @@
 #' @export
 #'
 #' @examples
-get_marriages <-
+get_all_registries <-
   function(rd = NULL,
            year = "2020",
            month = "Todos",
@@ -27,10 +28,10 @@ get_marriages <-
 
     deaths_radio_button <-
       rd$findElements(using = "class",
-                      value = "custom-control")[[3]]
+                      value = "custom-control")[[4]]
 
     deaths_radio_button$clickElement()
 
-    scrape_data(rd, year, month, state, query = queries$marriages)
+    scrape_data(rd, year, month, state, query = queries$all)
 
   }
