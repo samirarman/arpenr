@@ -1,129 +1,78 @@
-# AUXILIARY FUNCTIONS AND SCRIPTS----------------------------------------------
+scrape_data <- function(rd, year, month, state, query) {
+  data <- data.frame()
 
-# This file contains auxiliary scripts and functions used by
-# the main script (scraper.R)
+  is_ok_for_scraping <- FALSE
 
-is_next_btn_avail <- function(rd) {
-  btn <- tryCatch(
-    rd$findElement(using = "xpath",
-                   value = "//a[@aria-label= 'Goto next page']"),
-    error = function(x) {
-      return(NULL)
-    }
-  )
-  ! is.null(btn)
+  while (!is_ok_for_scraping) {
+    post_query(rd, year, month, state, query)
+    wait_for_table(rd)
+    is_ok_for_scraping <-
+      is_table_correct(rd, year, month, state, query)
+  }
+
+  data <- scrape_table(rd) %>%
+    rbind(data)
+
+
+  while (is_next_btn_avail(rd)) {
+    next_btn <-
+      rd$findElement(using = "xpath",
+                     value = "//a[@aria-label= 'Goto next page']")
+
+    suppressMessages(next_btn$clickElement())
+    wait_for_table()
+    data <- scrape_table(rd) %>%
+      rbind(data)
+  }
+
+  dplyr::arrange(data, data[[1]])
+
 }
 
-is_table_correct <- function(rd, caller, year, month, state) {
-  is_table_contents_correct(rd, caller, year, month, state) &
-    is_table_present(rd)
+scrape_table <- function(rd) {
+  card_elements <- scrape_card(rd)
+
+  table_data <-
+    xml2::read_html(rd$getPageSource()[[1]]) %>%
+    rvest::html_node("table") %>%
+    rvest::html_table() %>%
+    dplyr::mutate(
+      Ano = as.character(card_elements$year),
+      Mês = ifelse(is.null(card_elements$month), "Todos", card_elements$month)
+    )
 }
 
-is_table_contents_correct <- function(rd, year, month, state, caller) {
+scrape_card <- function(rd) {
+  elements <- list()
+
   card <-
     rd$findElement(using = "class", value = "mb-1")$getElementText()
 
-  card_components <- card %>% stringr::str_split(" - ") %>% unlist()
+  card_components <-
+    card %>% stringr::str_split(" - ") %>% unlist()
 
-  card_query <- card_components[1]
+  elements$query <- card_components[1]
 
-  card_state <- card_components[2]
+  elements$state <- card_components[2]
 
-  card_dates <-
+  dates <-
     card_components[3] %>% stringr::str_split("/") %>% unlist()
 
-  card_year <- NULL
+  elements$year <- NULL
 
-  card_month <- NULL
+  elements$month <- NULL
 
-  if (length(card_dates) == 2) {
-    card_month <- card_dates[1]
-    card_year <- card_dates[2]
+  if (length(dates) == 2) {
+    elements$month <- dates[1]
+    elements$year <- dates[2]
   }  else {
-    card_year <- card_dates[1]
+    elements$year <- dates[1]
   }
 
-  query_correct <- FALSE
-
-  month_correct <- FALSE
-
-  year_correct <- FALSE
-
-  state_correct <- FALSE
-
-  if (caller == "all" & card_query == "Registros") {
-    query_correct <- TRUE
-  } else if (caller == "births" & card_query == "Nascimentos") {
-    query_correct <- TRUE
-  } else if (caller == "marriages" & card_query == "Casamentos") {
-    query_correct <- TRUE
-  } else if (caller == "deaths" & card_query == "Óbitos") {
-    query_correct <- TRUE
-  }
-
-  if (month == "Todos" & is.null(card_month)) {
-    month_correct <- TRUE
-  } else if (month == card_month) {
-    month_correct <- TRUE
-  }
-
-  if (year == card_year) {
-    year_correct <- TRUE
-  }
-
-  if (state == card_state) {
-    state_correct <- TRUE
-  }
-
-  query_correct &
-    month_correct &
-    year_correct &
-    state_correct
+  elements
 }
 
-is_data_available <- function(rd) {
-  table <- xml2::read_html(rd$getPageSource()[[1]]) %>%
-    rvest::html_node("table") %>%
-    rvest::html_table()
-  ! table[1, 1] == "Não há resultados a serem exibidos."
-}
-
-is_table_present <- function(rd) {
-  table <- tryCatch(
-    rd$findElement(using = "class",
-                   value = "table-responsive"),
-    error = function(x) {
-      return(NULL)
-    }
-  )
-  ! is.null(table)
-}
-
-wait_for_table <- function(rd) {
-  while (!is_table_present(rd)) {
-    Sys.sleep(10)
-  }
-}
-
-
-#' @importFrom magrittr %>%
-scrape_table <- function(rd, year, month, state, caller) {
-
-  data <- xml2::read_html(rd$getPageSource()[[1]]) %>%
-    rvest::html_node("table") %>%
-    rvest::html_table() %>%
-    # tibble() %>%
-    dplyr::mutate(
-      Ano = as.character(year),
-      Mês = as.character(month)
-    )
-  if (state != "Todos") {
-    data <- dplyr::mutate(data, Estado = as.character(state))
-  }
-  data
-}
-
-post_query <- function(rd, year, month, state, caller) {
+post_query <- function(rd, year, month, state, query) {
   deaths_radio_button <- rd$findElements(using = "class",
                                          value = "custom-control")[[4]]
   deaths_radio_button$clickElement()
@@ -156,34 +105,93 @@ post_query <- function(rd, year, month, state, caller) {
   Sys.sleep(2)
 }
 
-scrape_data <-
-  function(rd, year, month, state, caller) {
-    data <- data.frame()
-
-    post_query(rd, year, month, state, caller)
-
-    if (!is_table_present(rd)) {
-      wait_for_table(rd)
-    } else if (is_data_available(rd)) {
-      data <- scrape_table(rd, year, month, state, caller) %>%
-        rbind(data)
-    }
-
-    while (is_next_btn_avail(rd)) {
-
-      next_btn <-
-        rd$findElement(using = "xpath",
-                       value = "//a[@aria-label= 'Goto next page']")
-
-      suppressMessages(next_btn$clickElement())
-
-      if (!is_table_present(rd)) {
-        wait_for_table(rd)
-      } else if (is_data_available(rd)) {
-        Sys.sleep(0.75)
-        data <- scrape_table(rd, year, month, state, caller) %>%
-          rbind(data)
-      }
-    }
-    dplyr::arrange(data, data[[1]])
+wait_for_table <- function(rd) {
+  while (!is_table_present(rd)) {
+    Sys.sleep(5)
   }
+}
+
+is_table_correct <- function(rd, year, month, state, query) {
+  is_table_present(rd) &
+    is_data_available(rd) &
+    is_table_contents_correct(rd, year, month, state, query)
+}
+
+is_table_contents_correct <-
+  function(rd, year, month, state, query) {
+    elements <- scrape_card(rd)
+
+    card_query <- elements$query
+
+    card_state <- elements$state
+
+    card_year <- elements$year
+
+    card_month <- elements$month
+
+    query_correct <- FALSE
+
+    month_correct <- FALSE
+
+    year_correct <- FALSE
+
+    state_correct <- FALSE
+
+    if (query == queries$all & card_query == "Registros") {
+      query_correct <- TRUE
+    } else if (query == queries$births & card_query == "Nascimentos") {
+      query_correct <- TRUE
+    } else if (query == queries$marriages & card_query == "Casamentos") {
+      query_correct <- TRUE
+    } else if (query == queries$deaths & card_query == "Óbitos") {
+      query_correct <- TRUE
+    }
+
+    if (month == "Todos" & is.null(card_month)) {
+      month_correct <- TRUE
+    } else if (month == card_month) {
+      month_correct <- TRUE
+    }
+
+    if (year == card_year) {
+      year_correct <- TRUE
+    }
+
+    if (state == card_state) {
+      state_correct <- TRUE
+    }
+
+    query_correct &
+      month_correct &
+      year_correct &
+      state_correct
+  }
+
+is_data_available <- function(rd) {
+  table <- xml2::read_html(rd$getPageSource()[[1]]) %>%
+    rvest::html_node("table") %>%
+    rvest::html_table()
+  ! table[1, 1] == "Não há resultados a serem exibidos."
+}
+
+is_table_present <- function(rd) {
+  table <- tryCatch(
+    rd$findElement(using = "class",
+                   value = "table-responsive"),
+    error = function(x) {
+      return(NULL)
+    }
+  )
+  ! is.null(table)
+}
+
+is_next_btn_avail <- function(rd) {
+  btn <- tryCatch(
+    rd$findElement(using = "xpath",
+                   value = "//a[@aria-label= 'Goto next page']"),
+    error = function(x) {
+      return(NULL)
+    }
+  )
+  ! is.null(btn)
+}
