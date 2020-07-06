@@ -4,6 +4,7 @@
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Travis build status](https://travis-ci.com/samirarman/arpenr.svg?branch=master)](https://travis-ci.com/samirarman/arpenr)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/samirarman/arpenr?branch=master&svg=true)](https://ci.appveyor.com/project/samirarman/arpenr)
 <!-- badges: end -->
 
 The goal of `{arpenr}` package is to ease the access to Brazil's Civil Registration data.
