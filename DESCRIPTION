@@ -23,3 +23,5 @@ Imports:
     rlang
 Suggests: 
     testthat
+URL: https://github.com/samirarman/arpenr
+BugReports: https://github.com/samirarman/arpenr/issues
