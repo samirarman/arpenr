@@ -128,7 +128,6 @@ wait_for_table <- function(rd) {
 
 is_table_correct <- function(rd, year, month, state, query) {
   is_table_present(rd) &
-    # is_data_available(rd) &
     is_table_contents_correct(rd, year, month, state, query)
 }
 
@@ -175,7 +174,9 @@ is_table_contents_correct <-
       year_correct <- TRUE
     }
 
-    if (state == card_state) {
+    if (state == "Todos" & card_state == "Brasil") {
+      state_correct <- TRUE
+    } else if (state == card_state) {
       state_correct <- TRUE
     }
 
@@ -193,13 +194,13 @@ is_data_available <- function(rd) {
 }
 
 is_table_present <- function(rd) {
-  table <- tryCatch(
+  table <- suppressMessages(tryCatch(
     rd$findElement(using = "class",
                    value = "table-responsive"),
     error = function(x) {
       return(NULL)
     }
-  )
+  ))
   ! is.null(table)
 }
 

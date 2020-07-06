@@ -19,7 +19,7 @@ init <- function(rd, year, month, state, wait) {
     navigate_to_site(rd, wait)
   }
 
-  check_arguments(rd, year, month, state, wait)
+  check_arguments(year, month, state, wait)
 }
 
 navigate_to_site <- function(rd, wait = 10L) {
@@ -34,8 +34,8 @@ check_remote_driver <- function(rd) {
   }
 }
 
-check_arguments <- function(rd, year, month, state, wait) {
-  if (as.character(year) %nin% read_years(rd)) {
+check_arguments <- function(year, month, state, wait) {
+  if (as.character(year) %nin% YEARS) {
     rlang::abort("Year is not in the available range.")
   }
 

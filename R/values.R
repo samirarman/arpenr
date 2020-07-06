@@ -78,3 +78,5 @@ STATES <- c(
   "Sergipe",
   "Tocantins"
 )
+
+YEARS <- c(as.character(2015:stringi::stri_sub(Sys.Date(),1L,4L)))
