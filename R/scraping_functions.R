@@ -81,9 +81,16 @@ scrape_card <- function(rd) {
 }
 
 post_query <- function(rd, year, month, state, query) {
-  deaths_radio_button <- rd$findElements(using = "class",
-                                         value = "custom-control")[[4]]
-  deaths_radio_button$clickElement()
+
+
+  radio_buttons <- rd$findElements(using = "class",
+                                         value = "custom-control")
+  selected_radio_button <- switch(query,
+                                  all = radio_buttons[[1]],
+                                  births = radio_buttons[[2]],
+                                  marriages = radio_buttons[[3]],
+                                  deaths = radio_buttons[[4]])
+  selected_radio_button$clickElement()
 
   fields <-
     rd$findElements(using = "class", value = "multiselect__input")
