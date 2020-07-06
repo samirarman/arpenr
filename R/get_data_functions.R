@@ -52,12 +52,7 @@ get_all_registries <-
            state = "Todos",
            wait = 10L) {
 
-    check_remote_driver(rd)
-    check_arguments(rd, year, month, state, wait)
-
-    if (rd$getCurrentUrl() != site) {
-      navigate_to_site(rd, wait)
-    }
+    init(rd, year, month, state, wait)
 
     deaths_radio_button <-
       rd$findElements(using = "class",
@@ -78,12 +73,7 @@ get_births <-
            state = "Todos",
            wait = 10L) {
 
-    check_remote_driver(rd)
-    check_arguments(rd, year, month, state, wait)
-
-    if (rd$getCurrentUrl() != site) {
-      navigate_to_site(rd, wait)
-    }
+    init(rd, year, month, state, wait)
 
     deaths_radio_button <-
       rd$findElements(using = "class",
@@ -104,12 +94,7 @@ get_marriages <-
            state = "Todos",
            wait = 10L) {
 
-    check_remote_driver(rd)
-    check_arguments(rd, year, month, state, wait)
-
-    if (rd$getCurrentUrl() != site) {
-      navigate_to_site(rd, wait)
-    }
+    init(rd, year, month, state, wait)
 
     deaths_radio_button <-
       rd$findElements(using = "class",
@@ -130,12 +115,7 @@ get_deaths <-
            state = "Todos",
            wait = 10L) {
 
-    check_remote_driver(rd)
-    check_arguments(rd, year, month, state, wait)
-
-    if (rd$getCurrentUrl() != site) {
-      navigate_to_site(rd, wait)
-    }
+    init(rd, year, month, state, wait)
 
     deaths_radio_button <-
       rd$findElements(using = "class",

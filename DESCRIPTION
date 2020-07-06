@@ -1,12 +1,13 @@
 Package: arpenr
-Title: Retrieves Data From ARPEN Brasil
+Title: Retrieves Data From Brazil's Civil Registration
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Samir",
            family = "Arman",
            role = c("aut", "cre"),
            email = "samir.arman@gmail.com")
-Description: Retrieves data from ARPEN Brasil webpages.
+Description: Utility functions to retrieve vital data from the 
+   Brazilian Civil Registration website (maintained by ARPEN Brasil).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -18,6 +19,7 @@ Imports:
     dplyr,
     stringr,
     magrittr,
-    RSelenium
+    RSelenium,
+    rlang
 Suggests: 
     testthat

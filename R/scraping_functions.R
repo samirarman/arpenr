@@ -11,8 +11,8 @@ scrape_data <- function(rd, year, month, state, query) {
   }
 
   if (is_data_available(rd)) {
-  data <- scrape_table(rd) %>%
-    rbind(data)
+    data <- scrape_table(rd) %>%
+      rbind(data)
   }
 
   while (is_next_btn_avail(rd)) {
@@ -24,13 +24,13 @@ scrape_data <- function(rd, year, month, state, query) {
     wait_for_table(rd)
 
     if (is_data_available(rd)) {
-    data <- scrape_table(rd) %>%
-      rbind(data)
+      data <- scrape_table(rd) %>%
+        rbind(data)
     }
   }
 
   if (nrow(data) > 1) {
-  dplyr::arrange(data, data[[1]])
+    dplyr::arrange(data, data[[1]])
   } else {
     data
   }
@@ -81,15 +81,15 @@ scrape_card <- function(rd) {
 }
 
 post_query <- function(rd, year, month, state, query) {
-
-
   radio_buttons <- rd$findElements(using = "class",
-                                         value = "custom-control")
-  selected_radio_button <- switch(query,
-                                  all = radio_buttons[[1]],
-                                  births = radio_buttons[[2]],
-                                  marriages = radio_buttons[[3]],
-                                  deaths = radio_buttons[[4]])
+                                   value = "custom-control")
+  selected_radio_button <- switch(
+    query,
+    all = radio_buttons[[1]],
+    births = radio_buttons[[2]],
+    marriages = radio_buttons[[3]],
+    deaths = radio_buttons[[4]]
+  )
   selected_radio_button$clickElement()
 
   fields <-
@@ -154,11 +154,14 @@ is_table_contents_correct <-
 
     if (query == queries$all & card_query == "Registros") {
       query_correct <- TRUE
-    } else if (query == queries$births & card_query == "Nascimentos") {
+    } else if (query == queries$births &
+               card_query == "Nascimentos") {
       query_correct <- TRUE
-    } else if (query == queries$marriages & card_query == "Casamentos") {
+    } else if (query == queries$marriages &
+               card_query == "Casamentos") {
       query_correct <- TRUE
-    } else if (query == queries$deaths & card_query == "\u00d3bitos") {
+    } else if (query == queries$deaths &
+               card_query == "\u00d3bitos") {
       query_correct <- TRUE
     }
 
@@ -207,7 +210,6 @@ is_next_btn_avail <- function(rd) {
     error = function(x) {
       return(NULL)
     }
-  )
-  )
+  ))
   ! is.null(btn)
 }
