@@ -28,8 +28,8 @@ navigate_to_site <- function(rd, wait = 10L) {
 }
 
 check_remote_driver <- function(rd) {
-  if (is.null(rd)) {
-    rlang::abort("You need to provide a webDriver object
+  if (is.null(rd) | !inherits(rd, "remoteDriver")) {
+    rlang::abort("You need to provide a remoteDriver object
                  from `{RSelenium}` or equivalent.")
   }
 }
