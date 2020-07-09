@@ -54,12 +54,6 @@ get_all_registries <-
 
     init(rd, year, month, state, wait)
 
-    deaths_radio_button <-
-      rd$findElements(using = "class",
-                      value = "custom-control")[[4]]
-
-    deaths_radio_button$clickElement()
-
     scrape_data(rd, year, month, state, query = queries$all)
 
   }
@@ -74,12 +68,6 @@ get_births <-
            wait = 10L) {
 
     init(rd, year, month, state, wait)
-
-    deaths_radio_button <-
-      rd$findElements(using = "class",
-                      value = "custom-control")[[2]]
-
-    deaths_radio_button$clickElement()
 
     scrape_data(rd, year, month, state, query = queries$births)
 
@@ -96,12 +84,6 @@ get_marriages <-
 
     init(rd, year, month, state, wait)
 
-    deaths_radio_button <-
-      rd$findElements(using = "class",
-                      value = "custom-control")[[3]]
-
-    deaths_radio_button$clickElement()
-
     scrape_data(rd, year, month, state, query = queries$marriages)
 
   }
@@ -116,12 +98,6 @@ get_deaths <-
            wait = 10L) {
 
     init(rd, year, month, state, wait)
-
-    deaths_radio_button <-
-      rd$findElements(using = "class",
-                      value = "custom-control")[[4]]
-
-    deaths_radio_button$clickElement()
 
     scrape_data(rd, year, month, state, query = queries$deaths)
 
