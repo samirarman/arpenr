@@ -46,8 +46,19 @@ scrape_table <- function(rd) {
     rvest::html_table() %>%
     dplyr::mutate(
       Ano = as.character(card_elements$year),
-      "M\u00eas" = ifelse(is.null(card_elements$month), "Todos", card_elements$month)
-    )
+      "M\u00eas" = ifelse(
+        is.null(card_elements$month),
+        "Todos",
+        card_elements$month),
+        "Regi\u00e3o" = "Todas",
+      )
+
+  if (card_elements$state != "Brasil") {
+    table_data <- dplyr::mutate(table_data, Estado = card_elements$state)
+  }
+
+  table_data
+
 }
 
 scrape_card <- function(rd) {
