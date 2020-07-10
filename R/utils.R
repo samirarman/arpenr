@@ -28,62 +28,52 @@ navigate_to_site <- function(rd, wait = 10L) {
 }
 
 check_remote_driver <- function(rd) {
-  if (is.null(rd)) {
-    rlang::abort("You need to provide a webDriver object
+  if (is.null(rd) | !inherits(rd, "remoteDriver")) {
+    rlang::abort("You need to provide a remoteDriver object
                  from `{RSelenium}` or equivalent.")
   }
 }
 
 check_arguments <- function(year, month, state, wait) {
+  check_year(year)
+  check_month(month)
+  check_state(state)
+  check_wait(wait)
+
+}
+
+check_year <- function(year) {
   if (as.character(year) %nin% YEARS) {
     rlang::abort("Year is not in the available range.")
   }
+}
 
+check_month <- function(month) {
   if (!is.character(month)) {
     rlang::abort("Month should be a character.")
   } else if (month %nin% MONTHS) {
     rlang::abort(
       "Month is not valid.\n
-         Check your spell and remember to capitalize
-         the first letter of month name."
+           Check your spell and remember to capitalize
+           the first letter of month name."
     )
   }
+}
 
+check_state <- function(state) {
   if (!is.character(state)) {
     rlang::abort("State should be a character.")
-  } else if (month %nin% MONTHS) {
+  } else if (state %nin% STATES) {
     rlang::abort(
       "State is not valid.\n
-         Check your spelling and remember to
-         use title case in state name (eg.: 'Mato Grosso do Sul')"
+           Check your spelling and remember to
+           use title case in state name (eg.: 'Mato Grosso do Sul')"
     )
   }
+}
 
+check_wait <- function(wait) {
   if (!is.numeric(wait)) {
     rlang::abort("Wait should be a number.")
   }
-
-}
-
-read_years <- function(rd) {
-  input_year_field <-
-    rd$findElements(using = "class", value = "multiselect__input")[[1]]
-  input_year_field$sendKeysToElement(list(""))
-
-  content_fields <-
-    rd$findElements(using = "class", value = "multiselect__content")
-
-  content_year_field <-
-    content_fields[[1]]$findChildElements(using = "class", value = "multiselect__element")
-
-  input_year_field$sendKeysToElement(list("", key = "enter"))
-
-  years <- list()
-
-  for (i in seq_along(content_year_field)) {
-    years[i] <- content_year_field[[i]]$getElementText()
-  }
-
-  unlist(years)
-
 }
