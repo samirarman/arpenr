@@ -31,7 +31,7 @@ STATES <- c(
   "Alagoas",
 
   # Amapá
-  "Amap\\u00e1",
+  "Amap\u00e1",
   "Amazonas",
   "Bahia",
 
