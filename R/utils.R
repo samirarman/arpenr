@@ -42,13 +42,13 @@ check_arguments <- function(year, month, state, wait) {
 
 }
 
-check_year <- function(year, YEARS, rlang, abort) {
+check_year <- function(year) {
   if (as.character(year) %nin% YEARS) {
     rlang::abort("Year is not in the available range.")
   }
 }
 
-check_month <- function(month, rlang, abort, MONTHS) {
+check_month <- function(month) {
   if (!is.character(month)) {
     rlang::abort("Month should be a character.")
   } else if (month %nin% MONTHS) {
@@ -60,10 +60,10 @@ check_month <- function(month, rlang, abort, MONTHS) {
   }
 }
 
-check_state <- function(state, rlang, abort, month, MONTHS) {
+check_state <- function(state) {
   if (!is.character(state)) {
     rlang::abort("State should be a character.")
-  } else if (month %nin% MONTHS) {
+  } else if (state %nin% STATES) {
     rlang::abort(
       "State is not valid.\n
            Check your spelling and remember to
@@ -72,7 +72,7 @@ check_state <- function(state, rlang, abort, month, MONTHS) {
   }
 }
 
-check_wait <- function(wait, rlang, abort) {
+check_wait <- function(wait) {
   if (!is.numeric(wait)) {
     rlang::abort("Wait should be a number.")
   }
