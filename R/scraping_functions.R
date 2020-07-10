@@ -116,8 +116,13 @@ post_query <- function(rd, year, month, state, query) {
   }
   Sys.sleep(1)
 
-  search_btn$clickElement()
-  Sys.sleep(2)
+  if (check_filled_correctly(rd, year, month, state, query)) {
+    search_btn$clickElement()
+    Sys.sleep(2)
+  } else {
+    rlang::abort("Problems filling query on webpage.")
+  }
+
 }
 
 wait_for_table <- function(rd) {
@@ -213,4 +218,54 @@ is_next_btn_avail <- function(rd) {
     }
   ))
   ! is.null(btn)
+}
+
+check_filled_correctly <- function(rd, year, month, state, query) {
+  all_radio_button <-
+    rd$findElement(using = "css selector",
+                   value = "#__BVID__29__BV_radio_0_opt_")
+
+  births_radio_button <-
+    rd$findElement(using = "css selector",
+                   value = "#__BVID__29__BV_radio_1_opt_")
+
+  marriages_radio_button <-
+    rd$findElement(using = "css selector",
+                   value = "#__BVID__29__BV_radio_2_opt_")
+
+  deaths_radio_button <-
+    rd$findElement(using = "css selector",
+                   value = "#__BVID__29__BV_radio_3_opt_")
+
+  radio_button_correct <- FALSE
+
+  if (query == queries$all &
+      deaths_radio_button$isElementSelected()[[1]]) {
+    radio_button_correct <- TRUE
+  } else if (query == queries$births &
+             births_radio_button$isElementSelected()[[1]]) {
+    radio_button_correct <- TRUE
+  } else if (query == queries$marriages &
+             births_radio_button$isElementSelected()[[1]]) {
+    radio_button_correct <- TRUE
+  } else if (query == queries$deaths &
+             deaths_radio_button$isElementSelected()[[1]]) {
+    radio_button_correct <- TRUE
+  }
+
+  fields <-
+    rd$findElements(using = "class", value = "multiselect__single")
+
+  year_field <- fields[[1]]
+  month_field <- fields[[2]]
+  state_field <- fields[[4]]
+
+  fields_correct <- (
+    year_field$getElementText() == year &
+      month_field$getElementText() == month &
+      state_field$getElementText() == state
+  )
+
+  radio_button_correct & fields_correct
+
 }
