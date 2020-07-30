@@ -234,19 +234,19 @@ is_next_btn_avail <- function(rd) {
 check_filled_correctly <- function(rd, year, month, state, query) {
   all_radio_button <-
     rd$findElement(using = "css selector",
-                   value = "#__BVID__29__BV_radio_0_opt_")
+                   value = "#__BVID__104_BV_option_0")
 
   births_radio_button <-
     rd$findElement(using = "css selector",
-                   value = "#__BVID__29__BV_radio_1_opt_")
+                   value = "#__BVID__104_BV_option_1")
 
   marriages_radio_button <-
     rd$findElement(using = "css selector",
-                   value = "#__BVID__29__BV_radio_2_opt_")
+                   value = "#__BVID__104_BV_option_2")
 
   deaths_radio_button <-
     rd$findElement(using = "css selector",
-                   value = "#__BVID__29__BV_radio_3_opt_")
+                   value = "#__BVID__104_BV_option_3")
 
   radio_button_correct <- FALSE
 
