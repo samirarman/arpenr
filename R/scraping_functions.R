@@ -44,6 +44,7 @@ scrape_table <- function(rd) {
     xml2::read_html(rd$getPageSource()[[1]]) %>%
     rvest::html_node("table") %>%
     rvest::html_table() %>%
+    dplyr::rename(Registros = "Registros (Click to sort Ascending)") %>%
     dplyr::mutate(
       Ano = as.character(card_elements$year),
       "M\u00eas" = ifelse(
@@ -55,6 +56,17 @@ scrape_table <- function(rd) {
 
   if (card_elements$state != "Brasil") {
     table_data <- dplyr::mutate(table_data, Estado = card_elements$state)
+  }
+
+  first_col_name <- colnames(table_data)[1] %>%
+    strsplit(" ") %>%
+    unlist %>%
+    dplyr::first()
+
+  if (first_col_name == "Estado") {
+    colnames(table_data)[1] <- "Estado"
+  } else {
+    colnames(table_data)[1] <- "Cidade"
   }
 
   table_data
@@ -246,16 +258,16 @@ check_filled_correctly <- function(rd, year, month, state, query) {
   radio_button_correct <- FALSE
 
   if (query == queries$all &
-      all_radio_button$isElementSelected()) {
+      all_radio_button$isElementSelected()[[1]]) {
     radio_button_correct <- TRUE
   } else if (query == queries$births &
-             births_radio_button$isElementSelected()) {
+             births_radio_button$isElementSelected()[[1]]) {
     radio_button_correct <- TRUE
   } else if (query == queries$marriages &
-             births_radio_button$isElementSelected()) {
+             births_radio_button$isElementSelected()[[1]]) {
     radio_button_correct <- TRUE
   } else if (query == queries$deaths &
-             deaths_radio_button$isElementSelected()) {
+             deaths_radio_button$isElementSelected()[[1]]) {
     radio_button_correct <- TRUE
   }
 
