@@ -1,6 +1,6 @@
 Package: arpenr
 Title: Retrieves Data From Brazil's Civil Registration
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: 
     person(given = "Samir",
            family = "Arman",
