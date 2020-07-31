@@ -232,35 +232,30 @@ is_next_btn_avail <- function(rd) {
 }
 
 check_filled_correctly <- function(rd, year, month, state, query) {
-  all_radio_button <-
-    rd$findElement(using = "css selector",
-                   value = "#__BVID__104_BV_option_0")
 
-  births_radio_button <-
-    rd$findElement(using = "css selector",
-                   value = "#__BVID__104_BV_option_1")
+  radio_buttons <- rd$findElements(using = "class",
+                                   value = "custom-control-input")
+  all_radio_button <- radio_buttons[[1]]
 
-  marriages_radio_button <-
-    rd$findElement(using = "css selector",
-                   value = "#__BVID__104_BV_option_2")
+  births_radio_button <- radio_buttons[[2]]
 
-  deaths_radio_button <-
-    rd$findElement(using = "css selector",
-                   value = "#__BVID__104_BV_option_3")
+  marriages_radio_button <- radio_buttons[[3]]
+
+  deaths_radio_button <- radio_buttons[[4]]
 
   radio_button_correct <- FALSE
 
   if (query == queries$all &
-      deaths_radio_button$isElementSelected()[[1]]) {
+      all_radio_button$isElementSelected()) {
     radio_button_correct <- TRUE
   } else if (query == queries$births &
-             births_radio_button$isElementSelected()[[1]]) {
+             births_radio_button$isElementSelected()) {
     radio_button_correct <- TRUE
   } else if (query == queries$marriages &
-             births_radio_button$isElementSelected()[[1]]) {
+             births_radio_button$isElementSelected()) {
     radio_button_correct <- TRUE
   } else if (query == queries$deaths &
-             deaths_radio_button$isElementSelected()[[1]]) {
+             deaths_radio_button$isElementSelected()) {
     radio_button_correct <- TRUE
   }
 
