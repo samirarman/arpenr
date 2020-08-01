@@ -18,7 +18,7 @@ scrape_data <- function(rd, year, month, state, query) {
   while (is_next_btn_avail(rd)) {
     next_btn <-
       rd$findElement(using = "xpath",
-                     value = "//a[@aria-label= 'Goto next page']")
+                     value = "//button[@aria-label= 'Go to next page']")
 
     next_btn$clickElement()
     wait_for_table(rd)
@@ -235,7 +235,7 @@ is_table_present <- function(rd) {
 is_next_btn_avail <- function(rd) {
   btn <- suppressMessages(tryCatch(
     rd$findElement(using = "xpath",
-                   value = "//a[@aria-label= 'Goto next page']"),
+                   value = "//button[@aria-label= 'Go to next page']"),
     error = function(x) {
       return(NULL)
     }
@@ -264,7 +264,7 @@ check_filled_correctly <- function(rd, year, month, state, query) {
              births_radio_button$isElementSelected()[[1]]) {
     radio_button_correct <- TRUE
   } else if (query == queries$marriages &
-             births_radio_button$isElementSelected()[[1]]) {
+             marriages_radio_button$isElementSelected()[[1]]) {
     radio_button_correct <- TRUE
   } else if (query == queries$deaths &
              deaths_radio_button$isElementSelected()[[1]]) {
